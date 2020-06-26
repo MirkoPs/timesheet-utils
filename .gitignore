@@ -2,5 +2,5 @@ dist/
 build/
 .idea/
 utils_pkg_USERNAME.egg-info/
-utils/__pycache__/
+timesheet-utils/__pycache__/
 utils.egg-info/
