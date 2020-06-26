@@ -2,28 +2,28 @@ import requests as http_requests
 from flask import redirect as flask_redirect
 from flask import request as flask_request
 from flask_restplus import abort
-
-services = {
-    'USER_SERVICE': '127.0.0.1:5001',
-    'EMPLOYEE_SERVICE': '127.0.0.1:5000',
-    'EMPLOYEE_COST_SERVICE': '127.0.0.1:5002',
-    'TIMESHEET_SERVICE': '127.0.0.1:5003',
-    'TIMESHEET_DETAIL_SERVICE': '127.0.0.1:5004',
-    'PROJECT_ACTIVITY_SERVICE': '127.0.0.1:5005',
-    'PROJECT_SERVICE': '127.0.0.1:5006',
-    'CUSTOMER_SERVICE': '127.0.0.1:5007',
-}
+from py_eureka_client import eureka_client
+from werkzeug.exceptions import Unauthorized
 
 
-def request(service_name, api_request, request_type='GET', check_ok=True):
-    url = 'http://{}/{}'.format(services[service_name], api_request)
-    headers = {'Authorization': flask_request.headers.get('Authorization')}
-    if request_type == 'GET':
-        response = http_requests.get(url, headers=headers)
-    elif request_type == 'DELETE':
-        response = http_requests.delete(url, headers=headers)
-    else:
-        raise ValueError('request_type {} is not valid!'.format(request_type))
+def get_authorization_header():
+    auth = flask_request.headers.get('Authorization')
+    if not auth:
+        raise Unauthorized('Missing authorization!')
+
+    return {'Authorization': flask_request.headers.get('Authorization')}
+
+
+def request(app_name, api_request, method='GET', check_ok=True):
+    def method_error():
+        raise ValueError('Method {} is not available!'.format(method))
+
+    def do_request(url):
+        headers = {'Authorization': flask_request.headers.get('Authorization')}
+        request_func = getattr(http_requests, method.lower(), method_error)
+        return request_func(url, headers=headers)
+
+    response = eureka_client.walk_nodes(app_name, api_request, prefer_ip=True, prefer_https=False, walker=do_request)
 
     if check_ok and response.status_code != 200:
         abort(response.status_code, response.json()['message'])
@@ -31,8 +31,8 @@ def request(service_name, api_request, request_type='GET', check_ok=True):
     return response
 
 
-def redirect(service_name, api_request):
-    return flask_redirect(
-        'http://{}/{}'.format(services[service_name], api_request),
-        code=307
-    )
+def redirect(app_name, api_request):
+    def do_redirect(url):
+        return flask_redirect(url, code=307)
+
+    return eureka_client.walk_nodes(app_name, api_request, prefer_ip=True, prefer_https=False, walker=do_redirect)
