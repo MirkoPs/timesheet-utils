@@ -1,7 +1,6 @@
-from os import path, getcwd, getenv
+from os import getenv
 
 import tenacity
-from dotenv import load_dotenv
 from flask import Flask
 from py_eureka_client import eureka_client
 
@@ -26,9 +25,6 @@ def get_eureka_path():
 
 
 class BaseConfig(object):
-    basedir = path.abspath(getcwd())
-    load_dotenv(path.join(basedir, '.env'), verbose=True)
-
     DATABASE_SERVER = get_db_path()
 
     EUREKA_SERVER = get_eureka_path()
