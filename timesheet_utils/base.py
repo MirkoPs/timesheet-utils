@@ -1,4 +1,4 @@
-from os import environ, path, getcwd
+from os import path, getcwd, getenv
 
 import tenacity
 from dotenv import load_dotenv
@@ -8,38 +8,35 @@ from py_eureka_client import eureka_client
 
 def get_db_path():
     return '{}+{}://{}:{}@{}:{}/{}'.format(
-        environ.get('DB_DIALECT'),
-        environ.get('DB_DRIVER'),
-        environ.get('DB_USERNAME'),
-        environ.get('DB_PASSWORD'),
-        environ.get('DB_HOST'),
-        environ.get('DB_PORT'),
-        environ.get('DB_NAME')
+        getenv('DB_DIALECT'),
+        getenv('DB_DRIVER'),
+        getenv('DB_USERNAME'),
+        getenv('DB_PASSWORD'),
+        getenv('DB_HOST'),
+        getenv('DB_PORT'),
+        getenv('DB_NAME')
     )
 
 
 def get_eureka_path():
     return 'http://{}:{}/eureka/'.format(
-        environ.get('EUREKA_HOST'),
-        environ.get('EUREKA_PORT')
+        getenv('EUREKA_HOST'),
+        getenv('EUREKA_PORT')
     )
 
 
 class BaseConfig(object):
     basedir = path.abspath(getcwd())
-    load_dotenv(path.join(basedir, '.env'))
+    load_dotenv(path.join(basedir, '.env'), verbose=True)
+
     DATABASE_SERVER = get_db_path()
 
     EUREKA_SERVER = get_eureka_path()
 
-    FLASK_RUN_PORT = int(environ.get('FLASK_RUN_PORT'))
+    FLASK_RUN_PORT = int(getenv('FLASK_RUN_PORT', '5000'))
 
 
-class TestConfig(object):
-    TESTING = True
-
-
-def create_app(bp, app_name, init_schema_func, config, tenacity_wait=30):
+def create_app(bp, app_name, init_schema_func, config=BaseConfig, tenacity_wait=30):
     app = Flask(__name__)
     app.register_blueprint(bp)
     app.config.from_object(config)
@@ -50,8 +47,15 @@ def create_app(bp, app_name, init_schema_func, config, tenacity_wait=30):
                            app_name=app_name,
                            instance_port=config.FLASK_RUN_PORT)
 
-    if not app.config['TESTING']:
-        init_schema_func()
-        _init_service_discovery()
+    init_schema_func()
+    _init_service_discovery()
+
+    return app
+
+
+def create_test_app(bp):
+    app = Flask(__name__)
+    app.register_blueprint(bp)
+    app.config['TESTING'] = True
 
     return app
