@@ -32,7 +32,7 @@ class BaseConfig(object):
 
     EUREKA_SERVER = get_eureka_path()
 
-    FLASK_RUN_PORT = environ.get('FLASK_RUN_PORT')
+    FLASK_RUN_PORT = int(environ.get('FLASK_RUN_PORT'))
 
 
 class TestConfig(object):
