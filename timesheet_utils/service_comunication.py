@@ -29,10 +29,3 @@ def request(app_name, api_request, method='GET', check_ok=True):
         abort(response.status_code, response.json()['message'])
 
     return response
-
-
-def redirect(app_name, api_request):
-    def do_redirect(url):
-        return flask_redirect(url, code=307)
-
-    return eureka_client.walk_nodes(app_name, api_request, prefer_ip=True, prefer_https=False, walker=do_redirect)

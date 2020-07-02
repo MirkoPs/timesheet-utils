@@ -36,6 +36,7 @@ def create_app(bp, app_name, init_schema_func, config=BaseConfig, tenacity_wait=
     app = Flask(__name__)
     app.register_blueprint(bp)
     app.config.from_object(config)
+    app.url_map.strict_slashes = True
 
     @tenacity.retry(wait=tenacity.wait_fixed(tenacity_wait))
     def _init_service_discovery():
