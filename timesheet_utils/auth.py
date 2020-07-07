@@ -3,7 +3,7 @@ from werkzeug.exceptions import Unauthorized, Forbidden
 
 
 def get_logged_user():
-    data = request('USER-SERVICE', '/', check_ok=False)
+    data = request('USER-SERVICE', '/me/', check_ok=False)
     if data.status_code != 200:
         raise Unauthorized(data.json()['msg'])
 
