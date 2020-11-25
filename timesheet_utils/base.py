@@ -32,9 +32,13 @@ class BaseConfig(object):
     FLASK_RUN_PORT = int(getenv('FLASK_RUN_PORT', '5000'))
 
 
-def create_app(bp, app_name, init_schema_func, config=BaseConfig, tenacity_wait=30):
+def create_app(bp, app_name, init_schema_func, config=BaseConfig, tenacity_wait=30, api_prefix=None):
     app = Flask(__name__)
-    app.register_blueprint(bp)
+    if api_prefix is not None:
+        app.register_blueprint(bp, url_prefix=api_prefix)
+    else:
+        app.register_blueprint(bp)
+            
     app.config.from_object(config)
     app.url_map.strict_slashes = True
     print(config.EUREKA_SERVER)
