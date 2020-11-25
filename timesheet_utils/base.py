@@ -37,7 +37,7 @@ def create_app(bp, app_name, init_schema_func, config=BaseConfig, tenacity_wait=
     app.register_blueprint(bp)
     app.config.from_object(config)
     app.url_map.strict_slashes = True
-
+    print(config.EUREKA_SERVER)
     @tenacity.retry(wait=tenacity.wait_fixed(tenacity_wait))
     def _init_service_discovery():
         eureka_client.init(eureka_server=config.EUREKA_SERVER,
