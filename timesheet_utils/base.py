@@ -32,15 +32,13 @@ class BaseConfig(object):
     FLASK_RUN_PORT = int(getenv('FLASK_RUN_PORT', '5000'))
 
 
-def create_app(bp, app_name, init_schema_func, config=BaseConfig, tenacity_wait=30, api_prefix=None):
+def create_app(bp, app_name, init_schema_func, config=BaseConfig, tenacity_wait=30, prefix=''):
     app = Flask(__name__)
-    if api_prefix is not None:
-        app.register_blueprint(bp, url_prefix=api_prefix)
-    else:
-        app.register_blueprint(bp)
+    app.register_blueprint(bp, url_prefix=prefix)
             
     app.config.from_object(config)
     app.url_map.strict_slashes = True
+    print(config.DATABASE_SERVER)
     print(config.EUREKA_SERVER)
     @tenacity.retry(wait=tenacity.wait_fixed(tenacity_wait))
     def _init_service_discovery():
