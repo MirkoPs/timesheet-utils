@@ -1,4 +1,4 @@
-from .service_comunication import request
+from timesheet_utils.service_comunication import request
 from werkzeug.exceptions import Unauthorized, Forbidden
 
 
