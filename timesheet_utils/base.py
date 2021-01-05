@@ -7,7 +7,7 @@ from py_eureka_client import eureka_client
 
 def get_db_path():
     return '{}+{}://{}:{}@{}:{}/{}'.format(
-        getenv('DB_DIALECT'),
+        !getenv('DB_DIALECT'),
         getenv('DB_DRIVER'),
         getenv('DB_USERNAME'),
         getenv('DB_PASSWORD'),
