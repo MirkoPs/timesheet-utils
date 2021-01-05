@@ -25,18 +25,24 @@ def get_eureka_path():
 
 
 class BaseConfig(object):
+    print(get_db_path())
     DATABASE_SERVER = get_db_path()
-
+    print(DATABASE_SERVER)
+    print(get_db_path())
     EUREKA_SERVER = get_eureka_path()
-
+    print(EUREKA_SERVER)
+    print(getenv('FLASK_RUN_PORT'))
     FLASK_RUN_PORT = int(getenv('FLASK_RUN_PORT', '5000'))
+    print(FLASK_RUN_PORT)
 
 
 def create_app(bp, app_name, init_schema_func, config=BaseConfig, tenacity_wait=30, prefix=''):
+    print("Init Flask App")
     app = Flask(__name__)
     app.register_blueprint(bp, url_prefix=prefix)
-            
+    print("before config")
     app.config.from_object(config)
+    print("After config")
     app.url_map.strict_slashes = True
     print(config.DATABASE_SERVER)
     print(config.EUREKA_SERVER)
@@ -45,9 +51,12 @@ def create_app(bp, app_name, init_schema_func, config=BaseConfig, tenacity_wait=
         eureka_client.init(eureka_server=config.EUREKA_SERVER,
                            app_name=app_name,
                            instance_port=config.FLASK_RUN_PORT)
-
+    print("before init_schema_func")
     init_schema_func()
+    print("after init_schema_func")
+    print("before service discovery")
     _init_service_discovery()
+    print("after service discovery")
 
     return app
 
