@@ -1,0 +1,7 @@
+dist/
+build/
+.idea/
+utils_pkg_USERNAME.egg-info/
+timesheet_utils/__pycache__/
+utils.egg-info/
+timesheet_utils.egg-info/
