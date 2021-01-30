@@ -39,7 +39,6 @@ def create_app(bp, app_name, init_schema_func, config=BaseConfig, tenacity_wait=
     print(config.EUREKA_SERVER)
     @tenacity.retry(wait=tenacity.wait_fixed(tenacity_wait))
     def _init_service_discovery():
-        print("eureka_client.init ...")
         eureka_client.init(eureka_server=config.EUREKA_SERVER,
                            app_name=app_name,
                            instance_port=config.FLASK_RUN_PORT)

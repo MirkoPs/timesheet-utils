@@ -2,9 +2,7 @@ from timesheet_utils.service_comunication import request
 from werkzeug.exceptions import Unauthorized, Forbidden
 
 
-def get_logged_user():
-    print('get logged user method!')
-    
+def get_logged_user():    
     data = request('USER-SERVICE', '/users/me/', check_ok=False)
     if data.status_code != 200:
         raise Unauthorized(data.json()['msg'])
