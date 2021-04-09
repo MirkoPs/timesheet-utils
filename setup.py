@@ -25,7 +25,7 @@ setuptools.setup(
         "flask~=1.1.2",
         "flask_restplus",
         "sqlalchemy~=1.3.17",
-        "py_eureka_client~=0.7.4",
+        # "py_eureka_client~=0.7.4",
         "tenacity~=6.2.0"
     ]
 )
