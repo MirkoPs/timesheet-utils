@@ -1,11 +1,10 @@
 from timesheet_utils.service_comunication import request
 from werkzeug.exceptions import Unauthorized, Forbidden
-
+import os
 
 def get_logged_user():
-    # TODO: take this from constants
-    data = request('https://users-service:30000/users/me/', check_ok=False)
-    # data = request('http://localhost:5000/users/me/', check_ok=False)
+    users_base_url_port = os.environ.get('USERS_SERVICE_BASE_URL_PORT')
+    data = request('{}/users/me/'.format(users_base_url_port), check_ok=False)
     if data.status_code != 200:
         print("'/users/me/' returned '{}' status".format(data.status_code))
         raise Unauthorized(data.json()['msg'])
