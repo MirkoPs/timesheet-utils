@@ -11,11 +11,10 @@ def get_db_path():
         os.environ.get('DB_DRIVER'),
         os.environ.get('DB_USERNAME'),
         os.environ.get('DB_PASSWORD'),
-        os.environ.get('DB_HOST'),
-        os.environ.get('DB_PORT'),
+        os.path.expandvars(os.environ.get('DB_HOST')),
+        os.path.expandvars(os.environ.get('DB_PORT')),
         os.environ.get('DB_NAME')
     )
-
 
 # def get_eureka_path():
 #     return 'http://{}:{}/eureka/'.format(
