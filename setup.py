@@ -23,7 +23,7 @@ setuptools.setup(
         "requests~=2.23.0",
         "werkzeug==0.16.1",
         "flask~=1.1.2",
-        "flask_restplus",
+        "flask_restplus~=0.13.0",
         "sqlalchemy~=1.3.17",
         # "py_eureka_client~=0.7.4",
         "tenacity~=6.2.0"
