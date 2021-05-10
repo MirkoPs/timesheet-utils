@@ -6,14 +6,16 @@ from flask import Flask
 
 
 def get_db_path():
-    return '{}+{}://{}:{}@{}:{}/{}'.format(
-        os.environ.get('DB_DIALECT'),
-        os.environ.get('DB_DRIVER'),
-        os.environ.get('DB_USERNAME'),
-        os.environ.get('DB_PASSWORD'),
-        os.path.expandvars(os.environ.get('DB_HOST')),
-        os.path.expandvars(os.environ.get('DB_PORT')),
-        os.environ.get('DB_NAME')
+    return os.path.expandvars(
+        '{}+{}://{}:{}@{}:{}/{}'.format(
+            os.environ.get('DB_DIALECT'),
+            os.environ.get('DB_DRIVER'),
+            os.environ.get('DB_USERNAME'),
+            os.environ.get('DB_PASSWORD'),
+            os.environ.get('DB_HOST'),
+            os.environ.get('DB_PORT'),
+            os.environ.get('DB_NAME')
+        )
     )
 
 # def get_eureka_path():
