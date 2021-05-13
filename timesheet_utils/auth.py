@@ -3,8 +3,8 @@ from werkzeug.exceptions import Unauthorized, Forbidden
 import os
 
 def get_logged_user():
-    users_base_url_port = os.environ.get('USERS_SERVICE_BASE_URL_PORT')
-    data = request('{}/users/me/'.format(users_base_url_port), check_ok=False)
+    users_service_url_port = os.path.expandvars(os.environ.get('USERS_SERVICE_URL_PORT'))
+    data = request('{}/users/me/'.format(users_service_url_port), check_ok=False)
     if data.status_code != 200:
         print("'/users/me/' returned '{}' status".format(data.status_code))
         raise Unauthorized(data.json()['msg'])
