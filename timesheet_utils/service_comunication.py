@@ -14,9 +14,8 @@ def get_authorization_header():
     return {'Authorization': flask_request.headers.get('Authorization')}
 
 
-# def request(app_name, api_request, method='GET', check_ok=True):
 def request(api_request_url, method='GET', check_ok=True):
-    def method_error():
+    def method_error(*args, **kwargs):
         raise ValueError('Method {} is not available!'.format(method))
 
     def do_request(url):
@@ -24,7 +23,6 @@ def request(api_request_url, method='GET', check_ok=True):
         request_func = getattr(http_requests, method.lower(), method_error)
         return request_func(url, headers=headers)
 
-    # response = eureka_client.walk_nodes(app_name, api_request, prefer_ip=True, prefer_https=False, walker=do_request)
     response = do_request(api_request_url)
 
     if check_ok and response.status_code != 200:
